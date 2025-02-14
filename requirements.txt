@@ -1,0 +1,13 @@
+uvicorn
+PyPDF2
+transformers
+psycopg2
+torch
+numpy~=2.2.1
+streamlit~=1.41.1
+scikit-learn~=1.6.1
+fastapi~=0.115.6
+requests~=2.32.3
+bs4
+pydantic~=2.10.5
+beautifulsoup4~=4.12.3
