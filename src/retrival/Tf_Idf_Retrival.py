@@ -6,10 +6,11 @@ from src.injestion.Tf_Idf_Injector import TfIdfInjector
 class TfIdfRetrival:
 
     @staticmethod
-    def retrieve_relevant_docs(query: str):
+    def retrieve_relevant_docs(query: str, doc_id: str):
         """
         Extracts documents similar to the query using TF-IDF.
         :param query: The query to search for.
+        :param doc_id: The document id to search for.
         :return: The list of tuples containing the document text and similarity score.
         """
 
@@ -29,11 +30,11 @@ class TfIdfRetrival:
         # Query most similar documents using SQL cosine similarity
         logger.info("Querying the most similar documents using SQL cosine similarity.")
         cursor.execute("""
-            SELECT document_text, 1 - (tfidf_vector <=> %s::vector) AS similarity
-            FROM documents
+            SELECT chunk, 1 - (tfidf_vector <=> %s::vector) AS similarity
+            FROM tf_idf_documents Where doc_id = %s
             ORDER BY similarity DESC  -- Lower distance means higher similarity
             LIMIT %s
-        """, (query_vec.tolist(), NUMBER_OF_MATCHES_FOR_TF_IDF))
+        """, (query_vec.tolist(),doc_id,  NUMBER_OF_MATCHES_FOR_TF_IDF))
 
         # Fetch results
         logger.info("Fetching results.")
@@ -49,11 +50,8 @@ class TfIdfRetrival:
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="air force lifecycle management center, wright - patterson air force base, ohio, is the contracting activity. raytheon technologies corp., pratt & whitney engines, east hartford, connecticut, has been awarded an indefinite - delivery / indefinite - quantity modification ( p00006 ) with a program ceiling of $ 3, 500, 000, 000 to previously awarded contract fa8626 - 22 - d - 0002 for technology maturation and risk reduction services. the work includes design, analysis, rig testing, prototype engine build and testing, and weapon system integration. the contract modification is for the execution of the prototype phase of the next generation"
-    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query)
+    sample_query="this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight"
+    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc6")
 
-    print(top_docs)
-
-    print("\nTop similar documents:")
     for doc, score in top_docs:
         print(f"Document: {doc} | Similarity Score: {score:.4f}")

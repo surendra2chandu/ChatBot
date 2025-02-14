@@ -38,10 +38,11 @@ class BatchPDFInjector:
         return pdf_files
 
     @staticmethod
-    def process_pdf_and_store( file,):
+    def process_pdf_and_store( file, file_name):
         """
         Extracts text from the PDF and stores the processed chunks in the database.
         :param file: Path to the PDF file.
+        :param file_name: Name of the file.
         :return: None
         """
 
@@ -52,7 +53,7 @@ class BatchPDFInjector:
         if not text:
             logger.warning(f"No text extracted from {file}. Skipping...")
             return
-        file_name = os.path.splitext(os.path.basename(file))[0]
+
         # Process the text pipeline
         logger.info("Processing text pipeline...")
         InjectionUtility().process_text_pipeline(text, file_name)
@@ -70,9 +71,16 @@ class BatchPDFInjector:
 
         for file in pdf_files:
             try:
+                # Get the file name
+                file_name = os.path.splitext(os.path.basename(file))[0]
+
+                # Check if the document already exists in the database
+                if DataBaseUtility().document_exists(file_name):
+                    logger.info(f"Document '{file_name}' already exists in the database. Skipping...")
+                    continue
                 # Process each PDF file
                 logger.info(f"Processing PDF file: {file}")
-                self.process_pdf_and_store(file)
+                self.process_pdf_and_store(file, file_name)
             except Exception as e:
                 # Log the error and raise an exception
                 logger.error(f"An error occurred while processing {file}: {e}")

@@ -42,16 +42,19 @@ TF_IDF_URL = "http://127.0.0.1:8002/tf-idf/"
 RETRIEVAL_URL = "http://127.0.0.1:8002/retrieve/similer_documents/"
 
 # Define the URL for the ollama service
-OLLAMA_URL = "http://localhost:8001/llm/ollama/"
+OLLAMA_URL = "http://localhost:8001/llm/ollama/question-answering/"
+
+# Define the URL for the ollama summarization service
+OLLAMA_SUMMARIZATION_URL = "http://localhost:8001/llm/ollama/summarize/"
 
 # Give the model path for MiniLM-L6-v2
-model_path = r"D:\llm\MiniLM-L6-v2"
+model_path = r"C:\llm\MiniLM-L6-v2"
 
 # Define the database configuration
 db_config = {
-        "dbname": "postgres",
-        "user": "postgres",
-        "password": "adisecret",
+        "dbname": "langchain",
+        "user": "langchain",
+        "password": "langchain",
         "host": "localhost",
         "port": 5432,
     }

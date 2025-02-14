@@ -1,5 +1,6 @@
 # Import necessary libraries
 import psycopg2
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from src.conf.Configurations import db_config, logger
 from src.utilities.DataBaseUtilities import DataBaseUtility
@@ -13,16 +14,13 @@ class TfIdfInjector:
 
         # Fetch document content from database
         logger.info("Fetching document content...")
-        self.corpus = DataBaseUtility().extract_doc_content()
+        self.documents = DataBaseUtility().extract_doc_chunks()  # Fetch all columns
+        self.corpus = [doc["chunk"] for doc in self.documents]  # Extract text chunks
 
         # Compute TF-IDF
         logger.info("Computing TF-IDF...")
         self.vectorizer = TfidfVectorizer()
-
-        # Fit the vectorizer
-        logger.info("Fitting the vectorizer...")
         self.tfidf_matrix = self.vectorizer.fit_transform(self.corpus).toarray()
-
 
     def store_tfidf_data(self):
         """
@@ -37,24 +35,30 @@ class TfIdfInjector:
 
         # Drop the table if it exists
         logger.info("Dropping the table if it exists...")
-        cursor.execute("DROP TABLE IF EXISTS documents;")
+        cursor.execute("DROP TABLE IF EXISTS tf_idf_documents;")
 
-        # Create the table
+        # Create the new table with tfidf_vector column
         logger.info("Creating the table...")
         cursor.execute("""
-            CREATE TABLE documents (
-                id SERIAL PRIMARY KEY,
-                document_text TEXT,
-                tfidf_vector vector
-            )
-        """)
+                CREATE TABLE tf_idf_documents (
+                    doc_id TEXT,
+                    doc_name TEXT,
+                    chunk_id INT,
+                    chunk TEXT,
+                    tfidf_vector vector
+                );
+            """)
 
         # Insert each document and its vector
         logger.info("Inserting documents and their vectors...")
-        for doc, vec in zip(self.corpus, self.tfidf_matrix):
+        for doc, vec in zip(self.documents, self.tfidf_matrix):
             cursor.execute(
-                "INSERT INTO documents (document_text, tfidf_vector) VALUES (%s, %s::vector)",
-                (doc, vec.tolist())  # Convert NumPy array to list for PostgreSQL
+                """
+                INSERT INTO tf_idf_documents (doc_id, doc_name, chunk_id, chunk, tfidf_vector)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (doc["doc_id"], doc["doc_name"], doc["chunk_id"], doc["chunk"], vec.tolist())
+                # Convert NumPy array to list
             )
 
         # Commit and close
@@ -71,7 +75,6 @@ class TfIdfInjector:
 
         # Return the vectorizer object
         return self.vectorizer
-
 
 
 # Run ingestion

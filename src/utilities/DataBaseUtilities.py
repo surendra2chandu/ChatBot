@@ -23,28 +23,35 @@ class DataBaseUtility:
     # Function to store chunks in the database
     def store_chunks_in_db(self, chunks, doc_name, doc_type):
         """
-        This function stores the chunks in the database.
+        This function stores the chunks in the database with a unique doc_id.
         :param chunks: The chunks to store.
         :param doc_name: The name of the document.
         :param doc_type: The type of the document.
         :return: None
         """
 
-
-        # # Drop the table if it exists
+        # Drop the table if it exists
         # logger.info("Dropping the table if it exists...")
         # self.cursor.execute("DROP TABLE IF EXISTS document_chunks;")
 
-        # Create the table if it doesn't exist (Using pgvector's vector type for embeddings)
+        # Create the table if it doesn't exist
         self.cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS document_chunks (
-                        doc_id SERIAL PRIMARY KEY,
-                        doc_name TEXT,
-                        doc_type CHAR(1),
-                        chunk TEXT,
-                        embedding vector  
-                    );
-                """)
+            CREATE TABLE IF NOT EXISTS document_chunks (
+                doc_id TEXT,  -- Unique identifier for each document
+                doc_name TEXT,
+                doc_type CHAR(1),
+                chunk_id SERIAL PRIMARY KEY,  -- Auto-incrementing chunk ID
+                chunk TEXT,
+                embedding vector  
+            );
+        """)
+
+        # Get the count of unique documents already stored
+        self.cursor.execute("SELECT COUNT(DISTINCT doc_name) FROM document_chunks;")
+        doc_count = self.cursor.fetchone()[0]  # Get the count of unique document names
+
+        # Assign a unique doc_id
+        doc_id = f"doc{doc_count + 1}"  # Generates doc1, doc2, etc.
 
         # Insert the data
         for chunk_text, chunk_embedding in chunks:
@@ -52,21 +59,22 @@ class DataBaseUtility:
 
             self.cursor.execute(
                 """
-                INSERT INTO document_chunks (doc_name, doc_type, chunk, embedding)
-                VALUES (%s, %s, %s, %s::vector)  -- Cast the embedding to the vector type
+                INSERT INTO document_chunks (doc_id, doc_name, doc_type, chunk, embedding)
+                VALUES (%s, %s, %s, %s, %s::vector)
                 """,
-                (doc_name, doc_type,  chunk_text, chunk_embedding_list),
+                (doc_id, doc_name, doc_type, chunk_text, chunk_embedding_list),
             )
 
         # Commit the changes
-        logger.info("Committing the changes...")
+        logger.info(f"Committing the changes for {doc_name} with doc_id {doc_id}...")
         self.conn.commit()
 
 
-    def fetch_similar_text(self, query_embedding):
+    def fetch_similar_text(self, query_embedding, doc_id):
         """
         This function retrieves all matches for the query sorted by similarity in descending order.
         :param query_embedding: The embedding of the query.
+        :param doc_id: The document ID to exclude from the search.
         :return: The results sorted by similarity in descending order.
         """
 
@@ -76,11 +84,11 @@ class DataBaseUtility:
         self.cursor.execute(
             """
             SELECT chunk, 1 - (embedding <=> %s::vector) AS similarity
-            FROM document_chunks
+            FROM document_chunks Where doc_id = %s
             ORDER BY similarity DESC
             LIMIT %s;
             """,
-            (query_embedding.tolist(), NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL)
+            (query_embedding.tolist(), doc_id, NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL)
         )
 
         # Fetch the results
@@ -95,38 +103,34 @@ class DataBaseUtility:
         # Return the results
         return results
 
-
-
-    def extract_doc_content(self, doc_type = 'D'):
+    def extract_doc_chunks(self):
         """
-        This function retrieves all the web content from the database.
-        :return: The doc content.
+        Fetch document chunks and metadata from the database.
+        :return: List of dictionaries containing doc_id, doc_name, chunk_id, and chunk.
         """
-        # Retrieve all web content
-        logger.info("Retrieving all doc content...")
-        self.cursor.execute(
+        try:
+            # Fetch relevant columns
+            query = """
+                SELECT doc_id, doc_name, chunk_id, chunk 
+                FROM document_chunks;
             """
-            SELECT chunk
-            FROM document_chunks
-            WHERE doc_type = 'W';
-            """
-        )
+            logger.info("Executing query to fetch document chunks...")
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
 
-        # Fetch the results
-        logger.info("Fetching the results...")
-        results = self.cursor.fetchall()
+            # Convert list of tuples into list of dictionaries
+            columns = ["doc_id", "doc_name", "chunk_id", "chunk"]
+            documents = [dict(zip(columns, row)) for row in rows]
 
-        # Convert the results to a list
-        chunks = [row[0] for row in results]
+            return documents
 
-        # Close the cursor and connection
-        logger.info("Closing the cursor and connection...")
-        self.cursor.close()
-        self.conn.close()
+        except Exception as e:
+            logger.error(f"Error fetching document chunks: {e}")
+            return []
 
-        # Return the results
-        return chunks
-
+        finally:
+            self.cursor.close()
+            self.conn.close()
 
     def document_exists(self, file_name):
         """
@@ -134,9 +138,13 @@ class DataBaseUtility:
         :param file_name: Name of the document to check.
         :return: True if document exists, otherwise False.
         """
-        self.cursor.execute("SELECT 1 FROM document_chunks WHERE doc_name = %s", (file_name,))
-        return self.cursor.fetchone() is not None
-
+        try:
+            self.cursor.execute("SELECT COUNT(*) FROM document_chunks WHERE doc_name = %s", (file_name,))
+            count = self.cursor.fetchone()[0]
+            return count > 0
+        except Exception as e:
+            if "does not exist" in str(e):  # Adjust based on the actual DB error message
+                return False
 
     def close(self):
         """

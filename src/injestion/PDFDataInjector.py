@@ -19,6 +19,7 @@ class PDFDataInjector:
         # Get the file name
         file_name = os.path.splitext(os.path.basename(pdf_path))[0]
 
+        # Check if the document already exists in the database
         if DataBaseUtility().document_exists(file_name):
             logger.info(f"Document '{file_name}' already exists in the database. Skipping...")
             return
@@ -39,7 +40,7 @@ class PDFDataInjector:
 if __name__ == "__main__":
 
     # Sample PDF path
-    sample_pdf_path = r'C:\Docs\sample_doc.pdf'
+    sample_pdf_path = r'C:\Docs\sample.pdf'
 
     # Process the PDF and store the chunks in the database
     PDFDataInjector().process_pdf_and_store(sample_pdf_path)
