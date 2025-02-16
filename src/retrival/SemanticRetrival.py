@@ -1,7 +1,7 @@
 # Importing required libraries
 from src.conf.Configurations import logger
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
-from src.utilities.DataBaseUtilities import DataBaseUtility
+from src.database_utilities.Semantic_Table import SemanticTable
 
 
 class SemanticRetrival:
@@ -24,7 +24,7 @@ class SemanticRetrival:
 
         # Fetch similar text from the database
         logger.info("Fetching similar text from the database...")
-        result = DataBaseUtility().fetch_similar_text(query_embedding, doc_id)
+        result = SemanticTable().fetch_similar_text(query_embedding, doc_id)
 
         return result
 

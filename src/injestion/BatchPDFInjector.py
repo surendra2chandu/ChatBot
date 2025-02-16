@@ -2,7 +2,7 @@
 from src.utilities.PDFDataExtractor import PDFDataExtractor
 from src.utilities.InjectionUtility import InjectionUtility
 from src.conf.Configurations import logger
-from src.utilities.DataBaseUtilities import DataBaseUtility
+from src.database_utilities.Semantic_Table import SemanticTable
 import os
 from fastapi import HTTPException
 
@@ -75,7 +75,7 @@ class BatchPDFInjector:
                 file_name = os.path.splitext(os.path.basename(file))[0]
 
                 # Check if the document already exists in the database
-                if DataBaseUtility().document_exists(file_name):
+                if SemanticTable().document_exists(file_name):
                     logger.info(f"Document '{file_name}' already exists in the database. Skipping...")
                     continue
                 # Process each PDF file
@@ -88,7 +88,7 @@ class BatchPDFInjector:
 
         # Commit and close the database connection
         logger.info("closing the database connection...")
-        DataBaseUtility().close()
+        SemanticTable().close()
 
 # Run the script
 if __name__ == "__main__":

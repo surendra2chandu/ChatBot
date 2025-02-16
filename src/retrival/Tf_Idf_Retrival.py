@@ -1,7 +1,8 @@
 # Import necessary libraries , classes and functions
-import psycopg2
-from src.conf.Configurations import db_config, NUMBER_OF_MATCHES_FOR_TF_IDF, logger
+from src.conf.Configurations import  logger
 from src.injestion.Tf_Idf_Injector import TfIdfInjector
+from src.database_utilities.TfIdf_Table import TfIdfTable
+
 
 class TfIdfRetrival:
 
@@ -22,36 +23,15 @@ class TfIdfRetrival:
         logger.info("Transforming the query to a TF-IDF vector.")
         query_vec = vectorizer.transform([query]).toarray()[0]
 
-        # Connect to PostgreSQL
-        logger.info("Connecting to PostgreSQL.")
-        conn = psycopg2.connect(**db_config)
-        cursor = conn.cursor()
-
-        # Query most similar documents using SQL cosine similarity
-        logger.info("Querying the most similar documents using SQL cosine similarity.")
-        cursor.execute("""
-            SELECT chunk, 1 - (tfidf_vector <=> %s::vector) AS similarity
-            FROM tf_idf_documents Where doc_id = %s
-            ORDER BY similarity DESC  -- Lower distance means higher similarity
-            LIMIT %s
-        """, (query_vec.tolist(),doc_id,  NUMBER_OF_MATCHES_FOR_TF_IDF))
-
-        # Fetch results
-        logger.info("Fetching results.")
-        results = cursor.fetchall()
-
-        # Close the cursor and connection
-        logger.info("Closing the cursor and connection.")
-        cursor.close()
-        conn.close()
+        results = TfIdfTable().get_similar_documents(doc_id, query_vec)
 
         return results
 
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight"
-    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc6")
+    sample_query="Air Force Life Cycle Management Center Standard Process For Life Cycle Sustainment Plans (LCSP) Process Owner: AFLCMC/LG-LZ Date: 15 October 2020 Version: 7.0 1 Record of Changes. Record of Changes Version Effective Date Summary 1.0 1 Apr 2016 Basic document; Approved by Standard Process (S&P) Board on 24 Mar 16 2.0 1 Jul 2016 Updated to reflect AFMC/CC delegation of Sustainment Command Representative requirement for ACAT II and below programs to center commanders 3.0 30 Jul 2017 Updated to reflect OSD Sample Outline Version 2.0 and other AFL"
+    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc1")
 
     for doc, score in top_docs:
         print(f"Document: {doc} | Similarity Score: {score:.4f}")

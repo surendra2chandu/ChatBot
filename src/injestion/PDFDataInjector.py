@@ -2,7 +2,7 @@
 from src.utilities.PDFDataExtractor import PDFDataExtractor
 from src.utilities.InjectionUtility import InjectionUtility
 from src.conf.Configurations import logger
-from src.utilities.DataBaseUtilities import DataBaseUtility
+from src.database_utilities.Semantic_Table import SemanticTable
 import os
 
 
@@ -20,13 +20,13 @@ class PDFDataInjector:
         file_name = os.path.splitext(os.path.basename(pdf_path))[0]
 
         # Check if the document already exists in the database
-        if DataBaseUtility().document_exists(file_name):
+        if SemanticTable().document_exists(file_name):
             logger.info(f"Document '{file_name}' already exists in the database. Skipping...")
             return
 
         # Extract text from PDF
         logger.info("Extracting text from PDF...")
-        text = PDFDataExtractor().extract_text_from_pdf(pdf_path)
+        text = PDFDataExtractor().extract_text(pdf_path)
 
         # Process the text pipeline
         logger.info("Processing text pipeline...")
@@ -34,7 +34,7 @@ class PDFDataInjector:
 
         # Commit and close the database connection
         logger.info("closing the database connection...")
-        DataBaseUtility().close()
+        SemanticTable().close()
 
 # Run the script
 if __name__ == "__main__":

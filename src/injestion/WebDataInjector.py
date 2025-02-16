@@ -2,7 +2,7 @@
 from src.web_scraping.DataExtractor import DataExtractor
 from src.utilities.LateChunking import LateChunking
 from src.conf.Configurations import logger, DOC_TYPE_FOR_WEB
-from src.utilities.DataBaseUtilities import DataBaseUtility
+from src.database_utilities.Semantic_Table import SemanticTable
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 
 
@@ -30,7 +30,7 @@ class WebDataInjector:
 
             # Store chunks in database
             logger.info("Storing chunks in the database...")
-            DataBaseUtility().store_chunks_in_db(chunks, doc_name, DOC_TYPE_FOR_WEB)
+            SemanticTable().store_chunks_in_db(chunks, doc_name, DOC_TYPE_FOR_WEB)
 
 # Run the script
 if __name__ == "__main__":

@@ -40,8 +40,9 @@ class Retrival:
 
 if __name__ == "__main__":
 
-    sample_query = "50 1 nov 2018 clarification on peomda approval updated lcsp annex requir ements and additional clarification added to aflcmc sample outline 60 30 sep 2019 updated to reflect streamlined lcsp development and coordination process to include product support enterprise review pser and delegation of sustainment command representative scr signature to aflcmclg lz 70 15 oct 2020 updated to reflect streamlined lcsp coordination process for classified programs and policy updates 2 development and coordination of the life cycle sustainment plan lcsp 10 description the lcsp documents the program manager pm and product support managers psm plan for formulating implementing and executing the sustain"
-    # Get similer documents for the given query
-    similer_documents = Retrival().get_similer_documents(sample_query, "doc_4")
+    sample_query = "this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight this document explores the importance of effective communication in project management it highlights various strategies that enhance team collaboration stakeholder engagement and overall project success modi was born and raised in vadnagar in nor theastern gujarat where he completed his secondary education he was introduced to the rss at the age of eight"
+
+   # Get similer documents
+    similer_documents = Retrival().get_similer_documents(sample_query, "doc6")
 
     print(similer_documents)

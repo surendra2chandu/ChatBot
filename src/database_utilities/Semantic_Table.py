@@ -3,7 +3,7 @@ from src.conf.Configurations import logger, db_config, NUMBER_OF_MATCHES_FOR_SEM
 import psycopg2
 
 
-class DataBaseUtility:
+class SemanticTable:
     def __init__(self):
         """                                                        vvvv
         This function initializes the DataBaseUtility class with the specified database configuration.
@@ -103,35 +103,6 @@ class DataBaseUtility:
         # Return the results
         return results
 
-    def extract_doc_chunks(self):
-        """
-        Fetch document chunks and metadata from the database.
-        :return: List of dictionaries containing doc_id, doc_name, chunk_id, and chunk.
-        """
-        try:
-            # Fetch relevant columns
-            query = """
-                SELECT doc_id, doc_name, chunk_id, chunk 
-                FROM document_chunks;
-            """
-            logger.info("Executing query to fetch document chunks...")
-            self.cursor.execute(query)
-            rows = self.cursor.fetchall()
-
-            # Convert list of tuples into list of dictionaries
-            columns = ["doc_id", "doc_name", "chunk_id", "chunk"]
-            documents = [dict(zip(columns, row)) for row in rows]
-
-            return documents
-
-        except Exception as e:
-            logger.error(f"Error fetching document chunks: {e}")
-            return []
-
-        finally:
-            self.cursor.close()
-            self.conn.close()
-
     def document_exists(self, file_name):
         """
         Checks if a document with the given name already exists in the database.
@@ -145,6 +116,25 @@ class DataBaseUtility:
         except Exception as e:
             if "does not exist" in str(e):  # Adjust based on the actual DB error message
                 return False
+
+    def get_all_document_ids(self):
+        """
+        Fetches all document IDs from the database in the order they are stored.
+        :return: List of document IDs.
+        """
+
+        # Fetch all document IDs in order
+        logger.info("Fetching all document IDs in order...")
+        self.cursor.execute("SELECT DISTINCT doc_id FROM document_chunks ORDER BY doc_id;")
+        doc_ids = [row[0] for row in self.cursor.fetchall()]  # Extracting IDs from tuples
+
+        # Close the cursor and connection
+        logger.info("Closing the cursor and connection...")
+        self.cursor.close()
+        self.conn.close()
+
+        # Return the document IDs
+        return doc_ids
 
     def close(self):
         """

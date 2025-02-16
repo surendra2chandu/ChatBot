@@ -58,4 +58,6 @@ class TextSummarizer:
 
 if __name__ == "__main__":
     # Run summarization
-    TextSummarizer().summarize("doc1")
+    res = TextSummarizer().summarize("doc1")
+
+    print(res)

@@ -1,71 +1,81 @@
-
-# import necessary libraries
+# Import necessary libraries
 import streamlit as st
 import sys
-sys.path.append(r'D:\p_work\ChatBot')
+sys.path.append(r'C:\PycharmProjects\ChatBot')
+
 from src.api import ChatBot
+from src.retrival.TextSummirizer import TextSummarizer
+from src.database_utilities.Semantic_Table import SemanticTable
+
 
 # Container for the title
 container = st.container(height=120, border=True)
 container.title("What assistance do you require?")
 
-# Initialize chat history and operation state
+# Initialize session state variables
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "operation" not in st.session_state:
     st.session_state.operation = None
+if "doc_id" not in st.session_state:
+    st.session_state.doc_id = None
 
-# Sidebar for buttons
+# Sidebar for selecting document and operation
 with st.sidebar:
     contain = st.container(height=210, border=True)
     contain.title("**Documents**")
-    contain.selectbox("Select the documents",["Doc1","Doc2","Doc3",])
+    st.session_state.doc_id = contain.selectbox("Select the document", SemanticTable().get_all_document_ids())
 
-    con = st.container(height= 210, border=True)
-    con.title("**Content source**")
-    con.radio("Select the operation",["Summerize","Q&A"])
-
-
+    con = st.container(height=210, border=True)
+    con.title("**Operation**")
+    st.session_state.operation = con.radio("Select the operation", ["Q&A", "Summarize"])
 
     if st.button("🔄 Refresh"):
         st.session_state.messages = []
         st.session_state.operation = None
 
-# Display chat messages from history on app rerun
+# Display chat messages from history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# User input for query
-if prompt := st.chat_input("Enter your query..."):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# User input for Q&A
+if st.session_state.operation == "Q&A":
+    if prompt := st.chat_input("Enter your query..."):
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(f"***Question:*** {prompt}")
+        # Display user message
+        with st.chat_message("user"):
+            st.markdown(f"***Question:*** {prompt}")
 
-    # Process query and generate response
+        # Process Q&A query
+        try:
+            response = ChatBot.get_response(prompt, st.session_state.doc_id)
+        except Exception as e:
+            response = f"There was an error while processing your request: {e}"
+
+        # Display assistant's response
+        with st.chat_message("assistant"):
+            st.markdown(f"***Answer:*** {response}")
+
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+# Process Summarization separately (without user input)
+elif st.session_state.operation == "Summarize":
     try:
-        if st.session_state.operation == "Late Chunking":
-            # Get response using Late Chunking
-            response = ChatBot.get_response(prompt)
+        if st.session_state.doc_id:
+            response = TextSummarizer().summarize(st.session_state.doc_id)
 
-        elif st.session_state.operation == "Tf-Idf":
-            # Get response using Tf-Idf
-            response = ChatBot.get_response(prompt)
+            # Display assistant's response
+            with st.chat_message("assistant"):
+                st.markdown(f"***Summary:*** {response}")
 
-        else:
-            response = "Please select either Late Chunking or Tf-Idf to perform an operation."
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": response})
     except Exception as e:
-        response = f"There was an error while processing your request: {e}"
-
-    # Display assistant's response
-    with st.chat_message("assistant"):
-        st.markdown(f"***Answer:*** {response}")
-
-    # Add assistant message to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+        st.error(f"There was an error while processing the summarization: {e}")
 
 # Custom CSS for buttons
 st.markdown(
@@ -74,7 +84,7 @@ st.markdown(
         .stButton>button { 
             width: 200px;   /* Set button width */
             height: 45px;   /* Set button height */
-            font-size: 10px; /* Set button font size */
+            font-size: 14px; /* Set button font size */
         }
     </style>
     """,

@@ -5,14 +5,15 @@ from src.utilities.OllamaServiceManager import process_ollama_request
 from src.utilities.ChatBotUtilities import get_sematic_similer_documents_text, get_tf_idf_similer_documents_text
 
 
-def get_response(query):
+def get_response(query, doc_id):
     """
     Function to get response from the LateChunking service
     :param query: The query to be processed
+    :param doc_id: The document id
     :return: The response from the service
     """
 
-    response  = requests.post(RETRIEVAL_URL, params={"query": query})
+    response  = requests.post(RETRIEVAL_URL, params={"query": query, "doc_id": doc_id})
     if response.status_code == 200:
 
         # Get the similer documents
@@ -52,6 +53,6 @@ def get_response(query):
 
 if __name__ == "__main__":
 
-    res = get_response("Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?")
+    res = get_response("Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?", "doc1")
 
     print(res)
