@@ -29,7 +29,6 @@ class RawPdfDataInjector:
             logger.error(f"Error during text splitting: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred during text splitting: {e}")
 
-
     def process_pdf(self, pdf_path):
         """
         Extract, split, and store PDF data.

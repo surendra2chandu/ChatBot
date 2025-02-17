@@ -6,7 +6,7 @@ from src.injestion.BatchPdfRawDataInjector import BatchPdfRawDataInjector
 router = APIRouter(tags=["Batch-Injection"])
 
 # Define the route for the root endpoint
-@router.post("/pdf/raw_data_injection/")
+@router.post("/pdf/raw_batch_data_injection/")
 async def inject_raw_batch_pdf_data(path: str):
     """
     Function to inject data from a batch of PDF files into the database
