@@ -1,13 +1,13 @@
 # Importing necessary libraries
 from fastapi import APIRouter
-from src.injestion.PDFDataInjector import PDFDataInjector
+from src.injestion.RawPdfDataInjector import RawPdfDataInjector
 
 # Initialize the router
 router = APIRouter(tags=["Injection"])
 
 # Define the route for the root endpoint
-@router.post("/pdf/injection/")
-async def inject_pdf_data(pdf_path: str):
+@router.post("/pdf/raw_data_injection/")
+async def inject_raw_pdf_data(pdf_path: str):
     """
     Function to inject data from a PDF file into the database
     :param pdf_path: The path to the PDF file
@@ -15,6 +15,6 @@ async def inject_pdf_data(pdf_path: str):
     """
 
     # Inject data from the PDF file into the database
-    PDFDataInjector.process_pdf_and_store(pdf_path)
+    RawPdfDataInjector().process_pdf(pdf_path)
 
     return "Data injected successfully"

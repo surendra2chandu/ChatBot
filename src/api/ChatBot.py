@@ -4,6 +4,7 @@ from src import logger
 from src.conf.Configurations import RETRIEVAL_URL, SEMANTIC_CONFIGURATION
 from src.utilities.OllamaServiceManager import process_ollama_request
 from src.utilities.ChatBotUtilities import ChatBotUtilities
+from fastapi import HTTPException
 
 class ChatBot:
 
