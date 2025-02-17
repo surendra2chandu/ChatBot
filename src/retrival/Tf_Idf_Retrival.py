@@ -36,8 +36,8 @@ class TfIdfRetrival:
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="Air Force Life Cycle Management Center Standard Process For Life Cycle Sustainment Plans (LCSP) Process Owner: AFLCMC/LG-LZ Date: 15 October 2020 Version: 7.0 1 Record of Changes. Record of Changes Version Effective Date Summary 1.0 1 Apr 2016 Basic document; Approved by Standard Process (S&P) Board on 24 Mar 16 2.0 1 Jul 2016 Updated to reflect AFMC/CC delegation of Sustainment Command Representative requirement for ACAT II and below programs to center commanders 3.0 30 Jul 2017 Updated to reflect OSD Sample Outline Version 2.0 and other AFL"
-    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc1")
+    sample_query="NEMALIPURI GOPICHAND 7993269669 nvgopichand68776gmail com LinkedIn wwwlinkedincominnemalipuri gopichand 7bb231222 DATA SCIENTIST AND MACHINE LEARNING ENGINEER Innovative and detail oriented Junior Data Scientist and Machine Learning Engineer with a solid foundation in data science machine learning and artificial intelligence Adept at developing and i mplementing data driven solutions to drive business insights and optimize processes Skilled in designing and executing machine learning models performing data analysis and automating workflows using advanced technologies Demonstrates strong analytical abilities and problem solving skills with"
+    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc7")
 
     for doc, score in top_docs:
         print(f"Document: {doc} | Similarity Score: {score:.4f}")

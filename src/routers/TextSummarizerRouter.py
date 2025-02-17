@@ -1,6 +1,6 @@
 # Importing necessary libraries
 from fastapi import APIRouter
-from src.retrival.TextSummarizer import TextSummarizer
+from src.api.TextSummarizer import TextSummarizer
 
 # Initialize the router
 router = APIRouter(tags=["text-summarizer"])

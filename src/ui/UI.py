@@ -4,7 +4,7 @@ import sys
 sys.path.append(r'C:\PycharmProjects\ChatBot')
 
 from src.api.ChatBot import ChatBot
-from src.retrival.TextSummarizer import TextSummarizer
+from src.api.TextSummarizer import TextSummarizer
 from src.database_utilities.Semantic_Table import SemanticTable
 
 

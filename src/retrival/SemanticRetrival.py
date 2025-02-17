@@ -35,10 +35,9 @@ class SemanticRetrival:
 
 if __name__ == "__main__":
     # Sample query
-    sample_query = "Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?"
-
+    sample_query = "NEMALIPURI GOPICHAND 7993269669 nvgopichand68776gmail com LinkedIn wwwlinkedincominnemalipuri gopichand 7bb231222 DATA SCIENTIST AND MACHINE LEARNING ENGINEER Innovative and detail oriented Junior Data Scientist and Machine Learning Engineer with a solid foundation in data science machine learning and artificial intelligence Adept at developing and i mplementing data driven solutions to drive business insights and optimize processes Skilled in designing and executing machine learning models performing data analysis and automating workflows using advanced technologies Demonstrates strong analytical abilities and problem solving skills with"
     # Retrieve relevant text
-    results = SemanticRetrival().retrieve_relevant_docs(sample_query, "doc4")
+    results = SemanticRetrival().retrieve_relevant_docs(sample_query, "doc7")
 
     for chunk, similarity in results:
         print(f"Chunk: {chunk}\nSimilarity: {similarity}\n")
