@@ -25,15 +25,6 @@ THRESHOLD_FOR_TF_IDF = 0.2
 # set the configuration
 SEMANTIC_CONFIGURATION = "BOTH"
 
-# Define the URL for the LateChunking service
-LATE_CHUNKING_URL = "http://127.0.0.1:8002/retrieve_text/"
-
-# Define the URL for the Tf-Idf service
-TF_IDF_URL = "http://127.0.0.1:8002/tf-idf/"
-
-# Define the URL for the retrieval service
-RETRIEVAL_URL = "http://127.0.0.1:8002/retrieve/similer_documents/"
-
 # Define the URL for the ollama service
 OLLAMA_URL = "http://localhost:8001/llm/ollama/question-answering/"
 
