@@ -3,6 +3,7 @@ from src import logger
 from PyPDF2 import PdfReader
 import re
 import fitz
+from fastapi import HTTPException
 
 class PDFDataExtractor:
 
@@ -45,16 +46,20 @@ class PDFDataExtractor:
         :param pdf_path: Path to the PDF file.
         :return: Extracted text from the PDF file.
         """
+        try:
+            # Open the PDF and extract text with cleaned formatting
+            logger.info(f"Extracting text from PDF: {pdf_path}")
+            doc = fitz.open(pdf_path)
+            text = " ".join([page.get_text("text").strip().replace("\n", " ") for page in doc])
 
-        # Open the PDF and extract text with cleaned formatting
-        logger.info(f"Extracting text from PDF: {pdf_path}")
-        doc = fitz.open(pdf_path)
-        text = " ".join([page.get_text("text").strip().replace("\n", " ") for page in doc])
+            # to-do get images data in pdf
+            text = " ".join(text.split())
 
-        # to-do get images data in pdf
-        text = " ".join(text.split())
+            return text
+        except Exception as e:
+            logger.info(f"Error occurred while extracting text from PDF: {e}")
+            raise HTTPException(status_code=500, detail=f"Error occurred while extracting text from PDF: {e}")
 
-        return text
 
 
 if __name__ == '__main__':

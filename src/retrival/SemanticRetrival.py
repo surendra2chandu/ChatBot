@@ -2,6 +2,7 @@
 from src import logger
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 from src.database_utilities.Semantic_Table import SemanticTable
+from fastapi import HTTPException
 
 
 class SemanticRetrival:
@@ -18,9 +19,13 @@ class SemanticRetrival:
         logger.info("Tokenizing and embedding the query...")
         res = GetTokenEmbeddings().tokenize_and_embed(query)
 
-        # Get the mean of the embeddings
-        logger.info("Getting the mean of the embeddings...")
-        query_embedding = res[1].mean(dim=0).numpy()
+        try:
+            # Get the mean of the embeddings
+            logger.info("Getting the mean of the embeddings...")
+            query_embedding = res[1].mean(dim=0).numpy()
+        except Exception as e:
+            logger.error(f"Error in getting the mean of the embeddings: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred during mean embedding: {e}")
 
         # Fetch similar text from the database
         logger.info("Fetching similar text from the database...")

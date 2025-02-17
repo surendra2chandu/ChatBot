@@ -5,6 +5,7 @@ from src.utilities.PDFDataExtractor import PDFDataExtractor
 from src.database_utilities.TfIdf_Table import TfIdfTable
 from src.conf.Configurations import CHUNK_SIZE, CHUNK_OVERLAP
 import os
+from fastapi import HTTPException
 
 
 def split_text_into_chunks(text):
@@ -13,15 +14,18 @@ def split_text_into_chunks(text):
     :param text: The text to split.
     :return: A list of text chunks.
     """
+    try:
+        # Define LangChain Token Splitter
+        logger.info("Splitting text into chunks...")
+        token_splitter = TokenTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
 
-    # Define LangChain Token Splitter
-    logger.info("Splitting text into chunks...")
-    token_splitter = TokenTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
+        # Split text into meaningful chunks
+        chunks = token_splitter.split_text(text)
 
-    # Split text into meaningful chunks
-    chunks = token_splitter.split_text(text)
-
-    return chunks
+        return chunks
+    except Exception as e:
+        logger.error(f"Error during text splitting: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred during text splitting: {e}")
 
 
 def process_pdf(pdf_path):

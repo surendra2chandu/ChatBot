@@ -3,57 +3,63 @@ import requests
 from src import logger
 from src.conf.Configurations import RETRIEVAL_URL, SEMANTIC_CONFIGURATION
 from src.utilities.OllamaServiceManager import process_ollama_request
-from src.utilities.ChatBotUtilities import get_sematic_similer_documents_text, get_tf_idf_similer_documents_text
+from src.utilities.ChatBotUtilities import ChatBotUtilities
 
+class ChatBot:
 
-def get_response(query, doc_id):
-    """
-    Function to get response from the LateChunking service
-    :param query: The query to be processed
-    :param doc_id: The document id
-    :return: The response from the service
-    """
+    @staticmethod
+    def get_response(query, doc_id):
+        """
+        Function to get response from the LateChunking service
+        :param query: The query to be processed
+        :param doc_id: The document id
+        :return: The response from the service
+        """
 
-    response  = requests.post(RETRIEVAL_URL, params={"query": query, "doc_id": doc_id})
-    if response.status_code == 200:
+        try:
+            response  = requests.post(RETRIEVAL_URL, params={"query": query, "doc_id": doc_id})
+            if response.status_code == 200:
 
-        # Get the similer documents
-        logger.info("Getting the similer documents...")
-        similer_documents = response.json()
+                # Get the similer documents
+                logger.info("Getting the similer documents...")
+                similer_documents = response.json()
 
-        if SEMANTIC_CONFIGURATION == "BOTH":
+                if SEMANTIC_CONFIGURATION == "BOTH":
 
-            # Get the text from the semantically similer documents and the Tf-Idf similer documents
-            logger.info("Getting the text from the semantically similer documents and the Tf-Idf similer documents...")
-            context = get_sematic_similer_documents_text(similer_documents) + get_tf_idf_similer_documents_text(similer_documents)
+                    # Get the text from the semantically similer documents and the Tf-Idf similer documents
+                    logger.info("Getting the text from the semantically similer documents and the Tf-Idf similer documents...")
+                    context = ChatBotUtilities().get_sematic_similer_documents_text(similer_documents) + ChatBotUtilities().get_tf_idf_similer_documents_text(similer_documents)
 
-        elif SEMANTIC_CONFIGURATION == "Tf_Idf":
+                elif SEMANTIC_CONFIGURATION == "Tf_Idf":
 
-            # Get the text from the Tf-Idf similer documents
-            logger.info("Getting the text from the Tf-Idf similer documents...")
-            context = get_tf_idf_similer_documents_text(similer_documents)
+                    # Get the text from the Tf-Idf similer documents
+                    logger.info("Getting the text from the Tf-Idf similer documents...")
+                    context = ChatBotUtilities().get_tf_idf_similer_documents_text(similer_documents)
 
-        else:
+                else:
 
-            # Get the text from the semantically similer documents
-            logger.info("Getting the text from the semantically similer documents...")
-            context = get_sematic_similer_documents_text(similer_documents)
+                    # Get the text from the semantically similer documents
+                    logger.info("Getting the text from the semantically similer documents...")
+                    context = ChatBotUtilities().get_sematic_similer_documents_text(similer_documents)
 
-        if context:
-            # Process the response with the Ollama model
-            logger.info("Processing the response with the Ollama model")
-            response = process_ollama_request(context, query)
-        else:
-            response = "No relevant information found in the database."
+                if context:
+                    # Process the response with the Ollama model
+                    logger.info("Processing the response with the Ollama model")
+                    response = process_ollama_request(context, query)
+                else:
+                    response = "No relevant information found in the database."
 
-        return response
+                return response
 
-    else:
-        return "Error occurred when processing the request to url " + RETRIEVAL_URL
+            else:
+                return "Error occurred when processing the request to url " + RETRIEVAL_URL + " Error: " + str(response.status_code)
+
+        except Exception as e:
+            return "Error occurred when processing the request to url " + RETRIEVAL_URL + " Error: " + str(e)
 
 
 if __name__ == "__main__":
 
-    res = get_response("Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?", "doc1")
+    res = ChatBot.get_response("Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?", "doc1")
 
     print(res)

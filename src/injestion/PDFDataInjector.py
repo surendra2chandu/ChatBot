@@ -1,7 +1,7 @@
 # Importing the required libraries
+from src import logger
 from src.utilities.PDFDataExtractor import PDFDataExtractor
 from src.utilities.InjectionUtility import InjectionUtility
-from src.conf.Configurations import logger
 from src.database_utilities.Semantic_Table import SemanticTable
 import os
 

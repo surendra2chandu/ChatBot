@@ -3,6 +3,7 @@
 from src import logger
 from transformers import AutoTokenizer, AutoModel
 from src.conf.Configurations import model_path
+from fastapi import HTTPException
 
 
 class EmbeddingUtility:
@@ -14,13 +15,18 @@ class EmbeddingUtility:
         # Set the model name
         self.model_name = model_path
 
-        # Load the tokenizer
-        logger.info(f"Loading tokenizer from {self.model_name}...")
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        try:
+            # Load the tokenizer
+            logger.info(f"Loading tokenizer from {self.model_name}...")
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
-        # Load the model
-        logger.info(f"Loading model from {self.model_name}...")
-        self.model = AutoModel.from_pretrained(self.model_name)
+            # Load the model
+            logger.info(f"Loading model from {self.model_name}...")
+            self.model = AutoModel.from_pretrained(self.model_name)
+        except Exception as e:
+            # Log the error
+            logger.error(f"Error during model loading: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred during model loading: {e}")
 
 
     def get_tokenizer(self):

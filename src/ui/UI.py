@@ -3,8 +3,8 @@ import streamlit as st
 import sys
 sys.path.append(r'C:\PycharmProjects\ChatBot')
 
-from src.api import ChatBot
-from src.retrival.TextSummirizer import TextSummarizer
+from src.api.ChatBot import ChatBot
+from src.retrival.TextSummarizer import TextSummarizer
 from src.database_utilities.Semantic_Table import SemanticTable
 
 
@@ -51,7 +51,7 @@ if st.session_state.operation == "Q&A":
 
         # Process Q&A query
         try:
-            response = ChatBot.get_response(prompt, st.session_state.doc_id)
+            response = ChatBot().get_response(prompt, st.session_state.doc_id)
         except Exception as e:
             response = f"There was an error while processing your request: {e}"
 

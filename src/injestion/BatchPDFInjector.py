@@ -12,30 +12,34 @@ class BatchPDFInjector:
     @staticmethod
     def get_pdf_files(directory_path: str):
         """
-        Returns a list of all PDF files in the given directory.
-
+        This function gets a list of all PDF files in the given directory.
         :param directory_path: Path to the directory containing PDF files.
-        :return: List of PDF file paths.
+        :return: List of PDF files in the directory.
         """
+        try:
+            # Check if the directory exists
+            if not os.path.isdir(directory_path):
+                raise HTTPException(status_code=400, detail=f"Invalid directory: {directory_path}")
 
-        # Check if the directory exists
-        if not os.path.isdir(directory_path):
-            raise HTTPException(status_code=400, detail=f"Invalid directory: {directory_path}")
+            # Get a list of all PDF files in the directory
+            logger.info(f"Getting PDF files in directory: {directory_path}")
+            pdf_files = [
+                os.path.join(directory_path, file)
+                for file in os.listdir(directory_path)
+                if file.lower().endswith('.pdf')
+            ]
 
-        # Get a list of all PDF files in the directory
-        logger.info(f"Getting PDF files in directory: {directory_path}")
-        pdf_files = [
-            os.path.join(directory_path, file)
-            for file in os.listdir(directory_path)
-            if file.lower().endswith('.pdf')
-        ]
+            # Log a warning if no PDF files are found
+            if not pdf_files:
+                logger.info(f"No PDF files found in {directory_path}")
 
-        # Log a warning if no PDF files are found
-        if not pdf_files:
-            logger.info(f"No PDF files found in {directory_path}")
+            # Return the list of PDF files
+            return pdf_files
 
-        # Return the list of PDF files
-        return pdf_files
+        except Exception as e:
+            # Log the error and raise an exception
+            logger.error(f"An error occurred while getting PDF files: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred while getting PDF files from {directory_path}: {e}")
 
     @staticmethod
     def process_pdf_and_store( file, file_name):

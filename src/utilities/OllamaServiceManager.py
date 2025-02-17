@@ -38,8 +38,8 @@ def process_ollama_request(context: str, question ):
 
             return match.group()
 
-        except ValueError as e:
-            logger.error(f"Error occurred while parsing the response: {e}")
+        except Exception as e:
+            logger.info(f"Error occurred while parsing the response: {e}")
             raise HTTPException(status_code=500, detail=f"Error occurred while parsing the response{e},"
                                                         f" and the response is {response.json()}")
 
@@ -70,10 +70,10 @@ def summarize_text(context: str):
             return res
 
         except ValueError as e:
-            logger.error(f"Error occurred while parsing the response: {e}")
+            logger.info(f"Error occurred while parsing the response: {e}")
             raise HTTPException(status_code=500, detail=f"Error occurred while parsing the response{e},"
                                                         f" and the response is {response.json()}")
 
     else:
-        logger.error(f"Error occurred while sending the request: {response.text}")
+        logger.info(f"Error occurred while sending the request: {response.text}")
         raise HTTPException(status_code=500, detail=f"Error occurred while sending the request: {response.text}")
