@@ -1,5 +1,5 @@
 # Import required libraries
-from src.conf.Configurations import logger, DOC_TYPE_FOR_PDF
+from src.conf.Configurations import logger
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 from src.utilities.LateChunking import LateChunking
 from src.database_utilities.Semantic_Table import SemanticTable
@@ -25,4 +25,4 @@ class InjectionUtility :
 
         # Store chunks in database
         logger.info("Storing chunks in the database...")
-        SemanticTable().store_chunks_in_db(chunks, file_name, DOC_TYPE_FOR_PDF)
+        SemanticTable().store_chunks_in_db(chunks, file_name)

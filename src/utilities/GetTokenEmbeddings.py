@@ -1,6 +1,8 @@
 # Importing required libraries
 from src.conf.Configurations import logger
 from src.utilities.EmbeddingUtility import EmbeddingUtility
+
+# to-do : use langchain modules to get the embeddings
 import torch
 
 
@@ -16,6 +18,7 @@ class GetTokenEmbeddings:
         self.model = EmbeddingUtility().get_model()
 
         # Max token limit for the model
+        # to-do : get the max token limit from the model  (snow flake)
         self.max_token_length = 512
 
     def tokenize_and_embed(self, text):

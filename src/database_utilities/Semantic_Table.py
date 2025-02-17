@@ -1,5 +1,5 @@
 # Importing the required libraries
-from src.conf.Configurations import logger, db_config, NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL
+from src.conf.Configurations import logger, db_config, NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL, DOC_TYPE_FOR_PDF
 import psycopg2
 
 
@@ -21,12 +21,11 @@ class SemanticTable:
 
 
     # Function to store chunks in the database
-    def store_chunks_in_db(self, chunks, doc_name, doc_type):
+    def store_chunks_in_db(self, chunks, doc_name):
         """
         This function stores the chunks in the database with a unique doc_id.
         :param chunks: The chunks to store.
         :param doc_name: The name of the document.
-        :param doc_type: The type of the document.
         :return: None
         """
 
@@ -62,7 +61,7 @@ class SemanticTable:
                 INSERT INTO document_chunks (doc_id, doc_name, doc_type, chunk, embedding)
                 VALUES (%s, %s, %s, %s, %s::vector)
                 """,
-                (doc_id, doc_name, doc_type, chunk_text, chunk_embedding_list),
+                (doc_id, doc_name, DOC_TYPE_FOR_PDF, chunk_text, chunk_embedding_list),
             )
 
         # Commit the changes

@@ -15,7 +15,7 @@ def split_text_into_chunks(text):
 
     # Define LangChain Token Splitter
     logger.info("Splitting text into chunks...")
-    token_splitter = TokenTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)  # Approx 500 chars
+    token_splitter = TokenTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
 
     # Split text into meaningful chunks
     chunks = token_splitter.split_text(text)

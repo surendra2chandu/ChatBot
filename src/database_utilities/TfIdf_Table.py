@@ -38,6 +38,7 @@ class TfIdfTable:
         """)
 
         # Get the count of unique documents already stored
+        # to-do : check other method
         self.cursor.execute("SELECT COUNT(DISTINCT doc_name) FROM tf_idf_documents;")
         doc_count = self.cursor.fetchone()[0]  # Get the count of unique document names
 
