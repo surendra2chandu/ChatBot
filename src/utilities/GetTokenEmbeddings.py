@@ -1,5 +1,5 @@
 # Importing required libraries
-from src.conf.Configurations import logger
+from src import logger
 from src.utilities.EmbeddingUtility import EmbeddingUtility
 
 # to-do : use langchain modules to get the embeddings

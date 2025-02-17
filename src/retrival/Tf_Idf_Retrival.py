@@ -1,5 +1,5 @@
 # Import necessary libraries , classes and functions
-from src.conf.Configurations import  logger
+from src import logger
 from src.injestion.Tf_Idf_Injector import TfIdfInjector
 from src.database_utilities.TfIdf_Table import TfIdfTable
 

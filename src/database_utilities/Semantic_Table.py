@@ -1,5 +1,6 @@
 # Importing the required libraries
-from src.conf.Configurations import logger, db_config, NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL, DOC_TYPE_FOR_PDF
+from src import logger
+from src.conf.Configurations import  db_config, NUMBER_OF_MATCHES_FOR_SEMANTIC_RETRIEVAL, DOC_TYPE_FOR_PDF
 import psycopg2
 
 

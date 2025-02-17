@@ -1,7 +1,8 @@
 # Importing necessary classes
+from src import logger
 import requests
 from fastapi import HTTPException
-from src.conf.Configurations import logger, OLLAMA_URL, OLLAMA_SUMMARIZATION_URL
+from src.conf.Configurations import OLLAMA_URL, OLLAMA_SUMMARIZATION_URL
 import re
 
 

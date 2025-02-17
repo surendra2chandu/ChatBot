@@ -1,5 +1,6 @@
 # Importing required libraries
-from src.conf.Configurations import logger, CHUNK_SIZE
+from src import logger
+from src.conf.Configurations import CHUNK_SIZE
 from src.utilities.EmbeddingUtility import EmbeddingUtility
 
 

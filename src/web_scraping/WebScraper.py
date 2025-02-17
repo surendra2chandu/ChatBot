@@ -1,7 +1,7 @@
 # Import necessary libraries
+from src import logger
 import requests
 from bs4 import BeautifulSoup
-from src.conf.Configurations import logger
 
 
 class WebScraper:

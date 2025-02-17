@@ -1,8 +1,9 @@
 # Import the necessary libraries
+from src import logger
 from langchain.text_splitter import TokenTextSplitter
 from src.utilities.PDFDataExtractor import PDFDataExtractor
 from src.database_utilities.TfIdf_Table import TfIdfTable
-from src.conf.Configurations import logger ,CHUNK_SIZE, CHUNK_OVERLAP
+from src.conf.Configurations import CHUNK_SIZE, CHUNK_OVERLAP
 import os
 
 

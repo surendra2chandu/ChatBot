@@ -1,8 +1,7 @@
 # Import necessary libraries
-import psycopg2
+from src import logger
 # to-do : use langchain module
 from sklearn.feature_extraction.text import TfidfVectorizer
-from src.conf.Configurations import db_config, logger
 from src.database_utilities.TfIdf_Table import TfIdfTable
 
 

@@ -1,7 +1,8 @@
 # Importing the required libraries
+from src import logger
 from src.web_scraping.DataExtractor import DataExtractor
 from src.utilities.LateChunking import LateChunking
-from src.conf.Configurations import logger, DOC_TYPE_FOR_WEB
+from src.conf.Configurations import DOC_TYPE_FOR_WEB
 from src.database_utilities.Semantic_Table import SemanticTable
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 

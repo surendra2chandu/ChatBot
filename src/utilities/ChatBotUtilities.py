@@ -1,4 +1,6 @@
-from src.conf.Configurations import THRESHOLD_FOR_SEMANTIC_RETRIVAL, THRESHOLD_FOR_TF_IDF, logger
+# Import necessary libraries
+from src import logger
+from src.conf.Configurations import THRESHOLD_FOR_SEMANTIC_RETRIVAL, THRESHOLD_FOR_TF_IDF
 
 def get_sematic_similer_documents_text(similer_documents):
     """

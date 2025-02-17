@@ -1,5 +1,6 @@
 # Import the required modules
-from src.conf.Configurations import db_config, logger
+from src import logger
+from src.conf.Configurations import db_config
 import psycopg2
 from src.utilities import OllamaServiceManager
 

@@ -1,7 +1,8 @@
 # Importing required libraries
 # to-do : use langchain transformers modules to get the embeddings
+from src import logger
 from transformers import AutoTokenizer, AutoModel
-from src.conf.Configurations import logger, model_path
+from src.conf.Configurations import model_path
 
 
 class EmbeddingUtility:

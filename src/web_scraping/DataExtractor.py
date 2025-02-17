@@ -1,7 +1,7 @@
 # Import the required libraries
+from src import logger
 from bs4 import BeautifulSoup
 from src.web_scraping.WebScraper import WebScraper
-from src.conf.Configurations import logger
 
 
 class DataExtractor:

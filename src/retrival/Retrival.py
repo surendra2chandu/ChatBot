@@ -1,8 +1,8 @@
 # import the necessary libraries
+from src import logger
 from src.retrival.SemanticRetrival import SemanticRetrival
 from src.retrival.Tf_Idf_Retrival import TfIdfRetrival
 from fastapi import HTTPException
-from src.conf.Configurations import logger
 
 class Retrival:
     @staticmethod

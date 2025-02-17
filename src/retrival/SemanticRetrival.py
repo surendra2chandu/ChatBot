@@ -1,5 +1,5 @@
 # Importing required libraries
-from src.conf.Configurations import logger
+from src import logger
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 from src.database_utilities.Semantic_Table import SemanticTable
 

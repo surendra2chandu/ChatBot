@@ -1,6 +1,6 @@
 # Import the necessary packages
+from src import logger
 from PyPDF2 import PdfReader
-from src.conf.Configurations import logger
 import re
 import fitz
 

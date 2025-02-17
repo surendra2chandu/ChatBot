@@ -1,5 +1,6 @@
 # Importing the required libraries
-from src.conf.Configurations import logger, db_config, NUMBER_OF_MATCHES_FOR_TF_IDF
+from src import logger
+from src.conf.Configurations import db_config, NUMBER_OF_MATCHES_FOR_TF_IDF
 import psycopg2
 
 

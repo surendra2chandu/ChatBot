@@ -1,6 +1,7 @@
 # import necessary libraries
 import requests
-from src.conf.Configurations import logger, RETRIEVAL_URL, SEMANTIC_CONFIGURATION
+from src import logger
+from src.conf.Configurations import RETRIEVAL_URL, SEMANTIC_CONFIGURATION
 from src.utilities.OllamaServiceManager import process_ollama_request
 from src.utilities.ChatBotUtilities import get_sematic_similer_documents_text, get_tf_idf_similer_documents_text
 

@@ -1,8 +1,9 @@
 # Importing the required libraries
+from src import logger
 from src.utilities.PDFDataExtractor import PDFDataExtractor
 import os
 from fastapi import HTTPException
-from src.conf.Configurations import logger, CHUNK_SIZE, CHUNK_OVERLAP
+from src.conf.Configurations import CHUNK_SIZE, CHUNK_OVERLAP
 from langchain.text_splitter import TokenTextSplitter
 from src.database_utilities.TfIdf_Table import TfIdfTable
 from src.database_utilities.TfIdf_Table import TfIdfTable
