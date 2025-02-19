@@ -1,10 +1,12 @@
-# Import necessary libraries
+
+#import neccessary libraries
 import fitz
 import pytesseract
 from PIL import Image
 import io
 import cv2
 import numpy as np
+
 
 # Set the path to tesseract.exe (Only needed for Windows users)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -13,25 +15,10 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 def preprocess_image(image):
     """
     Preprocess an image for better text recognition.
-    :param image: PIL Image object.
-    :return: Preprocessed image.
     """
-    img = np.array(image)  # Convert PIL image to NumPy array
-
-    # Debugging: Print image mode and shape
-    print(f"Image mode: {image.mode}, Image shape: {img.shape}")
-
-    # Ensure the image is in grayscale
-    if image.mode == "L":  # Already grayscale
-        gray = img
-    elif image.mode in ["RGB", "RGBA"]:  # Convert to grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    else:
-        raise ValueError(f"Unexpected image mode: {image.mode}")
-
-    # Apply thresholding for better OCR results
-    _, thresh = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
+    img = np.array(image)  # Convert PIL image to OpenCV format
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)  # Convert to grayscale
+    _, thresh = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)  # Binarization
     return Image.fromarray(thresh)  # Convert back to PIL Image
 
 
@@ -62,8 +49,7 @@ def extract_text_from_pdf(pdf_path):
             processed_image = preprocess_image(image)
 
             # Extract text using OCR
-            img_text = pytesseract.image_to_string(processed_image, lang="eng", config="--psm 3 --oem 3")
-
+            img_text = pytesseract.image_to_string(processed_image, lang="eng", config="--psm 6")
 
             # Check if text is meaningful
             if img_text.strip():
@@ -75,7 +61,7 @@ def extract_text_from_pdf(pdf_path):
 
 
 # Example Usage
-pdf_path = r"C:\Docs\demo.pdf"
+pdf_path = r"C:\Docs1\text_and_images.pdf"
 text_data = extract_text_from_pdf(pdf_path)
 
 print("Extracted Text:\n", text_data)
