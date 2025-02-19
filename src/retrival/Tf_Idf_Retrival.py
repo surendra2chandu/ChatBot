@@ -36,8 +36,8 @@ class TfIdfRetrival:
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="NEMALIPURI GOPICHAND 7993269669 nvgopichand68776gmail com LinkedIn wwwlinkedincominnemalipuri gopichand 7bb231222 DATA SCIENTIST AND MACHINE LEARNING ENGINEER Innovative and detail oriented Junior Data Scientist and Machine Learning Engineer with a solid foundation in data science machine learning and artificial intelligence Adept at developing and i mplementing data driven solutions to drive business insights and optimize processes Skilled in designing and executing machine learning models performing data analysis and automating workflows using advanced technologies Demonstrates strong analytical abilities and problem solving skills with"
-    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc7")
+    sample_query="makes visible to leadership all product support aspects of the program and should describe all stakeholders roles and responsibilities to include any organization with delegated sustain ment responsibilities such as other services product groups andor support providers 12 the lcsp evolves into an execution plan to describe the manner in which life cycle sustainment requirements are acquired applie d managed assessed measured and reported after system fielding by milestone ms c the lcsp should detail how the program will meet readiness targets sustain system performance capability threshold criteria comply with title 10 u nited states code usc 2337 life cycle management and product support 10 usc 2464 core logistics capabilities and 10 usc 2466 limitations on"
+    top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc1")
 
     for doc, score in top_docs:
         print(f"Document: {doc} | Similarity Score: {score:.4f}")
