@@ -1,8 +1,8 @@
 # Importing required libraries
 from src import logger
 from src.conf.Configurations import CHUNK_SIZE
-from src.utilities.EmbeddingUtility import EmbeddingUtility
 from fastapi import HTTPException
+import numpy as np
 
 
 class LateChunking:
@@ -10,9 +10,6 @@ class LateChunking:
         """
         This function initializes the LateChunking class.
         """
-
-        # Get the tokenizer
-        self.tokenizer = EmbeddingUtility().get_tokenizer()
 
     # Late chunking function
     def late_chunk(self, tokens, embeddings):
@@ -22,28 +19,22 @@ class LateChunking:
         :param embeddings: The embeddings.
         :return:
         """
+
+        # Initialize the list to store mean embeddings and text chunks
+        chunks = []
+
         try:
-            # Initialize the chunks list
-            chunks = []
+            logger.info("Applying late chunking with mean pooling...")
 
-            # Loop through the tokens and embeddings
-            logger.info("Chunking the tokens and embeddings...")
             for i in range(0, len(tokens), CHUNK_SIZE):
-                # Get the chunk tokens
-                chunk_tokens = tokens[i:i + CHUNK_SIZE]
+                chunk_tokens = tokens[i: i + CHUNK_SIZE]
+                chunk_embeddings = embeddings[i: i + CHUNK_SIZE]
 
-                # Get the chunk embedding (mean of embeddings for the chunk)
-                chunk_embedding = embeddings[i:i + CHUNK_SIZE].mean(dim=0).numpy()
+                if chunk_embeddings:
+                    mean_pooled_embedding = np.mean(chunk_embeddings, axis=0)  # Mean pooling
+                    chunks.append((" ".join(chunk_tokens), mean_pooled_embedding))
 
-                # Get the chunk text
-                chunk_text = self.tokenizer.convert_tokens_to_string(chunk_tokens).strip()
-
-                # Append the chunk to the chunks list
-                chunks.append((chunk_text, chunk_embedding))
-
-            # Return the chunks
             return chunks
-
         except Exception as e:
-            logger.info(f"Error during chunking: {e}")
-            raise HTTPException(status_code=500, detail=f"An error occurred during chunking: {e}")
+            logger.error(f"Error during late chunking: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred during late chunking: {e}")

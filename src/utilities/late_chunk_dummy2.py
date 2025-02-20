@@ -2,7 +2,6 @@
 import numpy as np
 from fastapi import HTTPException
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sklearn.metrics.pairwise import cosine_similarity
 from src import logger
 from src.conf.Configurations import model_path
@@ -32,17 +31,7 @@ class GetTokenEmbeddings:
         :param text: The text to tokenize.
         :return: A list of tokens and their corresponding embeddings.
         """
-        try:
-            logger.info("Tokenizing text at word level...")
-            self.tokens = text.split()  # Simple word-level tokenization
 
-            logger.info("Generating embeddings for individual tokens...")
-            self.token_embeddings = self.embedder.embed_documents(self.tokens)
-
-            return self.tokens, self.token_embeddings
-        except Exception as e:
-            logger.error(f"Error during token embedding: {e}")
-            raise HTTPException(status_code=500, detail=f"An error occurred during token embedding: {e}")
 
     def latechunking(self):
         """
@@ -103,7 +92,7 @@ if __name__ == "__main__":
     embedder.latechunking()
 
     # Example query
-    query = "where is gopichand worked in june 2023?"
+    query = "Where gopichand worked in june 2023?"
 
     # query = "Tell me the companies gopichand worked in his career?"
     top_matches = embedder.answer_query(query)

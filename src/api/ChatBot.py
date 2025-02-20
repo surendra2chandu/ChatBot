@@ -55,6 +55,6 @@ class ChatBot:
 
 if __name__ == "__main__":
 
-    res = ChatBot.get_response("Who are the customers impacted by the upcoming satellite change for the AFN TV programming package in the Pacific region?", "doc1")
+    res = ChatBot.get_response("where is gopichand worked in june 2023?", "doc7")
 
     print(res)

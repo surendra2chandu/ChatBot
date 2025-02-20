@@ -3,6 +3,7 @@ from src import logger
 from src.utilities.GetTokenEmbeddings import GetTokenEmbeddings
 from src.database_utilities.Semantic_Table import SemanticTable
 from fastapi import HTTPException
+import numpy as np
 
 
 class SemanticRetrival:
@@ -22,7 +23,7 @@ class SemanticRetrival:
         try:
             # Get the mean of the embeddings
             logger.info("Getting the mean of the embeddings...")
-            query_embedding = res[1].mean(dim=0).numpy()
+            query_embedding = np.mean(res[1], axis=0)
         except Exception as e:
             logger.error(f"Error in getting the mean of the embeddings: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred during mean embedding: {e}")
@@ -37,7 +38,7 @@ if __name__ == "__main__":
     # Sample query
     sample_query = "where is gopichand worked in june 2023?"
     # Retrieve relevant text
-    results = SemanticRetrival().retrieve_relevant_docs(sample_query, "doc7")
+    results = SemanticRetrival().retrieve_relevant_docs(sample_query, "doc1")
 
     for chunk, similarity in results:
         print(f"Chunk: {chunk}\nSimilarity: {similarity}\n")
