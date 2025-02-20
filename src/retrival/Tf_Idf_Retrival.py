@@ -36,7 +36,7 @@ class TfIdfRetrival:
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="makes visible to leadership all product support aspects of the program and should describe all stakeholders roles and responsibilities to include any organization with delegated sustain ment responsibilities such as other services product groups andor support providers 12 the lcsp evolves into an execution plan to describe the manner in which life cycle sustainment requirements are acquired applie d managed assessed measured and reported after system fielding by milestone ms c the lcsp should detail how the program will meet readiness targets sustain system performance capability threshold criteria comply with title 10 u nited states code usc 2337 life cycle management and product support 10 usc 2464 core logistics capabilities and 10 usc 2466 limitations on"
+    sample_query="where is gopichand worked in june 2023?"
     top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc1")
 
     for doc, score in top_docs:

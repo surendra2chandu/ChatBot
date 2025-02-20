@@ -41,10 +41,9 @@ def extract_text_from_pdf(pdf_path):
     for page_number in range(len(doc)):
         page = doc[page_number]
         text = page.get_text("text")  # Extract text from the page
-
-        page_text = f"\n--- Page {page_number + 1} ---\n"
+        page_text = ""
         if text.strip():
-            page_text += f"\n[Text]\n{text.strip()}\n"
+            page_text += text.strip() + "\n"
 
         images = page.get_images(full=True)  # Get all images on the page
 
@@ -65,7 +64,7 @@ def extract_text_from_pdf(pdf_path):
 
             # Check if text is meaningful
             if img_text.strip():
-                page_text += f"\n[Image {img_index + 1}]\n{img_text.strip()}\n"
+                page_text += img_text.strip() + "\n"
 
         extracted_text += page_text  # Append text from the current page
 

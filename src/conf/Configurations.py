@@ -2,7 +2,7 @@
 CHUNK_SIZE = 128
 
 # Define the chunk overlap
-CHUNK_OVERLAP = 50
+CHUNK_OVERLAP = 10
 
 # Define the document type for PDF
 DOC_TYPE_FOR_PDF  = "D"

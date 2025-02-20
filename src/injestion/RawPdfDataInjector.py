@@ -57,5 +57,5 @@ class RawPdfDataInjector:
 
 # Run the program
 if __name__ == "__main__":
-    sample_pdf_path = r'C:\Docs\gopichandnemalipuri_resume.pdf' # Replace with your PDF file path
+    sample_pdf_path = r'C:\Docs\mixed_file.pdf' # Replace with your PDF file path
     RawPdfDataInjector().process_pdf(sample_pdf_path)
