@@ -35,7 +35,7 @@ class SemanticRetrival:
 
 if __name__ == "__main__":
     # Sample query
-    sample_query = "NEMALIPURI GOPICHAND 7993269669 nvgopichand68776gmail com LinkedIn wwwlinkedincominnemalipuri gopichand 7bb231222 DATA SCIENTIST AND MACHINE LEARNING ENGINEER Innovative and detail oriented Junior Data Scientist and Machine Learning Engineer with a solid foundation in data science machine learning and artificial intelligence Adept at developing and i mplementing data driven solutions to drive business insights and optimize processes Skilled in designing and executing machine learning models performing data analysis and automating workflows using advanced technologies Demonstrates strong analytical abilities and problem solving skills with"
+    sample_query = "where is gopichand worked in june 2023?"
     # Retrieve relevant text
     results = SemanticRetrival().retrieve_relevant_docs(sample_query, "doc7")
 
