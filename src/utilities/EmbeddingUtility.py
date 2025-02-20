@@ -1,5 +1,4 @@
 # Importing required libraries
-# to-do : use langchain transformers modules to get the embeddings
 from src import logger
 from src.conf.Configurations import model_path
 from fastapi import HTTPException
