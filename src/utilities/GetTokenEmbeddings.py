@@ -71,3 +71,19 @@ class GetTokenEmbeddings:
         except Exception as e:
             logger.error(f"Error during tokenization and embedding: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred during tokenization and embedding: {e}")
+
+
+if __name__ == "__main__":
+
+    # take 5 lines of text
+    text = "This is a sample text to test the tokenization and embedding process.\n"
+    text += "The text is split into smaller chunks to handle long texts.\n"
+    text += "Each chunk is tokenized and embedded separately.\n"
+    text += "The embeddings are then combined to represent the entire text.\n"
+    text += "This process helps in handling long texts efficiently.\n"
+
+    # Initialize the GetTokenEmbeddings class and tokenize the text
+    token_embedder = GetTokenEmbeddings().tokenize_and_embed(text)
+
+    # Print the tokens and embeddings
+    print(token_embedder)
