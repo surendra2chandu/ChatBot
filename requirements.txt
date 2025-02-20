@@ -13,6 +13,7 @@ pydantic~=2.10.5
 tiktoken
 pymupdf
 langchain~=0.3.18
+langchain_community
 pytesseract~=0.3.13
 pillow~=11.1.0
 beautifulsoup4~=4.13.3
