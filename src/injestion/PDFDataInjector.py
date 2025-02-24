@@ -40,7 +40,7 @@ class PDFDataInjector:
 if __name__ == "__main__":
 
     # Sample PDF path
-    sample_pdf_path = r'C:\Docs\mixed_file.pdf'
+    sample_pdf_path = r'C:\D.pdf'
 
     # Process the PDF and store the chunks in the database
     PDFDataInjector().process_pdf_and_store(sample_pdf_path)

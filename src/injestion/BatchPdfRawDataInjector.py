@@ -74,7 +74,7 @@ class BatchPdfRawDataInjector:
 
         # Extract text from PDF
         logger.info(f"Extracting text from PDF: {file}")
-        text = PDFDataExtractor().extract_text_from_pdf(file)
+        text = PDFDataExtractor().extract_text(file)
 
         if not text:
             logger.warning(f"No text extracted from {file}. Skipping...")

@@ -2,7 +2,7 @@
 from src import logger
 from src.conf.Configurations import model_path
 from fastapi import HTTPException
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 

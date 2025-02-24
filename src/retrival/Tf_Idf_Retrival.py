@@ -36,7 +36,7 @@ class TfIdfRetrival:
 
 # Run retrieval
 if __name__ == "__main__":
-    sample_query="where is gopichand worked in june 2023?"
+    sample_query="air force life cycle management center standard process for life cycle sustainment plans lcsp process owner aflcmclg lz date 15 october 2020 version 7 0 1 record of changes record of changes version effective date summary 10 1 apr 2016 basic document approved by standard process sp board on 24 mar 16 20 1 jul 2016 updated to reflect afmccc delegation of sustainment command representative requirement for acat ii and below programs to center commanders 30 30 jul 2017 updated to reflect osd sample outline version 20 and other aflcmc level process improvements 40 1 oct 2017 administrative update to reflect updated afi 6310120 101 dtd 9 may 2017 reference changes"
     top_docs = TfIdfRetrival().retrieve_relevant_docs(sample_query, "doc1")
 
     for doc, score in top_docs:

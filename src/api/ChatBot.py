@@ -26,19 +26,19 @@ class ChatBot:
 
                 # Get the text from the semantically similar documents and the Tf-Idf similar documents
                 logger.info("Getting the text from the semantically similar documents and the Tf-Idf similar documents...")
-                context = ChatBotUtilities().get_sematic_similar_documents_text(similar_documents) + ChatBotUtilities().get_tf_idf_similar_documents_text(similer_documents)
+                context = ChatBotUtilities().get_sematic_similar_documents_text(similar_documents) + ChatBotUtilities().get_tf_idf_similar_documents_text(similar_documents)
 
             elif SEMANTIC_CONFIGURATION == "Tf_Idf":
 
-                # Get the text from the Tf-Idf similer documents
-                logger.info("Getting the text from the Tf-Idf similer documents...")
-                context = ChatBotUtilities().get_tf_idf_similer_documents_text(similer_documents)
+                # Get the text from the Tf-Idf similar documents
+                logger.info("Getting the text from the Tf-Idf similar documents...")
+                context = ChatBotUtilities().get_tf_idf_similar_documents_text(similar_documents)
 
             else:
 
-                # Get the text from the semantically similer documents
-                logger.info("Getting the text from the semantically similer documents...")
-                context = ChatBotUtilities().get_sematic_similer_documents_text(similer_documents)
+                # Get the text from the semantically similar documents
+                logger.info("Getting the text from the semantically similar documents...")
+                context = ChatBotUtilities().get_sematic_similar_documents_text(similar_documents)
 
             if context:
                 # Process the response with the Ollama model

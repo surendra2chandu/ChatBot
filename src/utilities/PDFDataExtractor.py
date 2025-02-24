@@ -87,6 +87,6 @@ class PDFDataExtractor:
 
 if __name__ == '__main__':
     pdf_data_extractor = PDFDataExtractor()
-    sample_pdf_path = r'C:\Docs\mixed_file.pdf'
+    sample_pdf_path = r'C:\Docs1\D.pdf'
     text = pdf_data_extractor.extract_text(sample_pdf_path)
     print(text)
