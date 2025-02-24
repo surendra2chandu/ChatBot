@@ -16,17 +16,17 @@ class ChatBot:
         :return: The response from the service
         """
 
-        # Get the similer documents
-        logger.info("Getting the similer documents...")
-        similer_documents  = Retrival().get_similar_documents(query, doc_id)
+        # Get the similar documents
+        logger.info("Getting the similar documents...")
+        similar_documents  = Retrival().get_similar_documents(query, doc_id)
 
-        if similer_documents:
+        if similar_documents:
 
             if SEMANTIC_CONFIGURATION == "BOTH":
 
-                # Get the text from the semantically similer documents and the Tf-Idf similer documents
-                logger.info("Getting the text from the semantically similer documents and the Tf-Idf similer documents...")
-                context = ChatBotUtilities().get_sematic_similer_documents_text(similer_documents) + ChatBotUtilities().get_tf_idf_similer_documents_text(similer_documents)
+                # Get the text from the semantically similar documents and the Tf-Idf similar documents
+                logger.info("Getting the text from the semantically similar documents and the Tf-Idf similar documents...")
+                context = ChatBotUtilities().get_sematic_similar_documents_text(similar_documents) + ChatBotUtilities().get_tf_idf_similar_documents_text(similer_documents)
 
             elif SEMANTIC_CONFIGURATION == "Tf_Idf":
 
