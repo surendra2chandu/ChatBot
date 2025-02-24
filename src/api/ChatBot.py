@@ -18,7 +18,7 @@ class ChatBot:
 
         # Get the similer documents
         logger.info("Getting the similer documents...")
-        similer_documents  = Retrival().get_similer_documents(query, doc_id)
+        similer_documents  = Retrival().get_similar_documents(query, doc_id)
 
         if similer_documents:
 

@@ -6,16 +6,16 @@ from src.retrival.Retrival import Retrival
 router = APIRouter(tags=["retrival"])
 
 
-@router.post("/retrieve/similer_documents/")
-async def get_similer_documents(query: str, doc_id):
+@router.post("/retrieve/similar_documents/")
+async def get_similar_documents(query: str, doc_id):
     """
-    Function to get similer documents for the given query
-    :param query: The query for which to find similer documents
+    Function to get similar documents for the given query
+    :param query: The query for which to find similar documents
     :param doc_id: The document id
-    :return: The similer documents
+    :return: The similar documents
     """
 
-    # Get similer documents for the given query
-    similer_documents = Retrival().get_similer_documents(query, doc_id)
+    # Get similar documents for the given query
+    similar_documents = Retrival().get_similar_documents(query, doc_id)
 
-    return similer_documents
+    return similar_documents
