@@ -1,6 +1,6 @@
 # Importing necessary libraries
 from fastapi import APIRouter
-from src.injestion.PDFDataInjector import PDFDataInjector
+from src.ingestion.PDFDataInjector import PDFDataInjector
 
 # Initialize the router
 router = APIRouter(tags=["Injection"])

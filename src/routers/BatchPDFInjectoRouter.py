@@ -1,6 +1,6 @@
 # Importing necessary libraries
 from fastapi import APIRouter
-from src.injestion.BatchPDFInjector import BatchPDFInjector
+from src.ingestion.BatchPDFInjector import BatchPDFInjector
 
 # Initialize the router
 router = APIRouter(tags=["Batch-Injection"])

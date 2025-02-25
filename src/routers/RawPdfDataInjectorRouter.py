@@ -1,6 +1,6 @@
 # Importing necessary libraries
 from fastapi import APIRouter
-from src.injestion.RawPdfDataInjector import RawPdfDataInjector
+from src.ingestion.RawPdfDataInjector import RawPdfDataInjector
 
 # Initialize the router
 router = APIRouter(tags=["Injection"])

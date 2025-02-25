@@ -1,6 +1,6 @@
 # Import necessary libraries , classes and functions
 from src import logger
-from src.injestion.Tf_Idf_Injector import TfIdfInjector
+from src.ingestion.Tf_Idf_Injector import TfIdfInjector
 from src.database_utilities.TfIdf_Table import TfIdfTable
 from fastapi import HTTPException
 
