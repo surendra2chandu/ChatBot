@@ -55,6 +55,7 @@ class ChatBot:
 
 if __name__ == "__main__":
 
+    # Sample query and document id
     res = ChatBot.get_response("where is gopichand worked in june 2023?", "doc7")
 
     print(res)
