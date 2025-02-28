@@ -32,7 +32,7 @@ OLLAMA_URL = "http://localhost:8001/llm/ollama/question-answering/"
 OLLAMA_SUMMARIZATION_URL = "http://localhost:8001/llm/ollama/summarize/"
 
 # Give the model path for MiniLM-L6-v2
-model_path = r"D:\llm\MiniLM-L6-v2"
+model_path = r"C:\llm\MiniLM-L6-v2"
 
 # Give the pytesseract path
 pytesseract_path= r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -40,9 +40,9 @@ pytesseract_path= r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Define the database configuration
 db_config = {
-        "dbname": "postgres",
-        "user": "postgres",
-        "password": "adisecret",
+        "dbname": "langchain",
+        "user": "langchain",
+        "password": "langchain",
         "host": "localhost",
         "port": 5432,
     }
