@@ -2,6 +2,7 @@
 from src import logger
 from fastapi import HTTPException
 from langchain_ollama.llms import OllamaLLM
+import json
 
 
 class OllamaSummarizer:
@@ -81,26 +82,15 @@ class OllamaSummarizer:
 
 if __name__ == "__main__":
 
-    json = """ "LineItems": [
-    {
-      "id": 258823,
-      "ClaimGuid": "10c21da2-1543-4588-b65e-ca2cde711860",
-      "ClaimID": 0,
-      "InboundFileId": 0,
-      "RevenueCode": {
-        "Value": "0905",
-        "Description": "0905",
-        "SequenceOrder": 0
-      },
-      "Code": "S9480",
-      "UnitsBilled": 1.0000,
-      "ServiceDateFrom": "2023-07-05T00:00:00",
-      "Charges": 455.7100,
-      "NonCoveredCharges": 0.0000
-    }
-  ]"""
+    with open('data.json', 'r') as file:
+        d = json.load(file)
 
-    # Generate the summary using the Ollama model
-    summary = OllamaSummarizer().summarize_with_ollama(json)
-    print(summary)
+    # Convert each item in the dictionary to a JSON string with key-value pairs
+    json_strings = []
+    for key, value in d.items():
+        json_string = f'"{key}" : {json.dumps(value)}'
+
+        # Generate the summary using the Ollama model
+        summary = OllamaSummarizer().summarize_with_ollama(json_string)
+        print(summary)
 

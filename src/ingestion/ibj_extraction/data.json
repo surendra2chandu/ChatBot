@@ -85,12 +85,7 @@
         "Value": "0905",
         "Description": "0905",
         "SequenceOrder": 0
-      },
-      "Code": "S9480",
-      "UnitsBilled": 1.0000,
-      "ServiceDateFrom": "2023-07-05T00:00:00",
-      "Charges": 455.7100,
-      "NonCoveredCharges": 0.0000
+      }
     }
   ]
 }
