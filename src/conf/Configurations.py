@@ -40,9 +40,9 @@ pytesseract_path= r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Define the database configuration
 db_config = {
-        "dbname": "langchain",
-        "user": "langchain",
-        "password": "langchain",
+        "dbname": "postgres",
+        "user": "postgres",
+        "password": "postgres",
         "host": "localhost",
         "port": 5432,
     }

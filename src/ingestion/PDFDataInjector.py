@@ -30,6 +30,7 @@ class PDFDataInjector:
 
         # Process the text pipeline
         logger.info("Processing text pipeline...")
+
         InjectionUtility().process_text_pipeline(text, file_name)
 
         # Commit and close the database connection
@@ -40,7 +41,7 @@ class PDFDataInjector:
 if __name__ == "__main__":
 
     # Sample PDF path
-    sample_pdf_path = r'C:\D.pdf'
+    sample_pdf_path = r'C:\Docs\C.pdf'
 
     # Process the PDF and store the chunks in the database
     PDFDataInjector().process_pdf_and_store(sample_pdf_path)

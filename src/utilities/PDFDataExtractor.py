@@ -6,6 +6,7 @@ import io
 import cv2
 import numpy as np
 import re
+import os
 
 class PDFDataExtractor:
 
@@ -88,5 +89,8 @@ class PDFDataExtractor:
 if __name__ == '__main__':
     pdf_data_extractor = PDFDataExtractor()
     sample_pdf_path = r'C:\Docs1\D.pdf'
+
+    num_processes = os.cpu_count()
+
     text = pdf_data_extractor.extract_text(sample_pdf_path)
     print(text)

@@ -1,7 +1,10 @@
 # Importing required libraries
-from fastapi import HTTPException
 from src import logger
-from src.utilities.EmbeddingUtility import EmbeddingUtility
+from src.conf.Configurations import model_path
+from fastapi import HTTPException
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_ollama.llms import OllamaLLM
+
 
 
 class GetTokenEmbeddings:
@@ -11,7 +14,7 @@ class GetTokenEmbeddings:
         """
 
         # Get the model
-        self.model = EmbeddingUtility().get_model()
+        self.model = OllamaLLM(base_url="http://127.0.0.1:11434", model="all-minilm")
 
 
     def tokenize_and_embed(self, text):
@@ -26,10 +29,17 @@ class GetTokenEmbeddings:
 
 
             logger.info("Generating embeddings for individual tokens...")
-            token_embeddings = self.model.embed_documents(tokens)
+            token_embeddings = self.model.embeddings(tokens)
 
             return tokens, token_embeddings
         except Exception as e:
             logger.error(f"Error during token embedding: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred during token embedding: {e}")
+
+
+if __name__ == "__main__":
+    # Test the GetTokenEmbeddings class
+    text = "This is a test sentence."
+    embeddings = GetTokenEmbeddings().tokenize_and_embed(text)
+    print(embeddings)
 

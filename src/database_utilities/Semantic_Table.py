@@ -176,5 +176,3 @@ class SemanticTable:
         logger.info("Closing the cursor and connection...")
         self.cursor.close()
         self.conn.close()
-
-

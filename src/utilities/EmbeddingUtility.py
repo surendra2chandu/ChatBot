@@ -1,4 +1,6 @@
 # Importing required libraries
+from scipy.signal import max_len_seq
+
 from src import logger
 from src.conf.Configurations import model_path
 from fastapi import HTTPException
