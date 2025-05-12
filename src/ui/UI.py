@@ -25,6 +25,8 @@ with st.sidebar:
     contain = st.container(height=210, border=True)
     contain.title("**Documents**")
     st.session_state.doc_id = contain.selectbox("Select the document", SemanticTable().get_all_document_ids())
+    contain.title("**Operation**")
+    st.session_state.operation = contain.radio("Select the operation", ["Q&A", "Summarize"])
 
     con = st.container(height=210, border=True)
     con.title("**Operation**")
