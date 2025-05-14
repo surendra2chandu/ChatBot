@@ -1,228 +1,172 @@
-# 📘 Database Connection Guide
+# Database Connection Utility
 
-This guide explains how to connect to **SQL Server** and **PostgreSQL** databases using Python. It covers both **local** and **cloud (Azure/AWS)** scenarios using `pyodbc` and `psycopg2`.
+This module provides utility functions to connect to databases using either **Azure SQL**, **Local SQL Server**, or **PostgreSQL**. 
+
+It uses `pyodbc` for SQL connections and `psycopg2` for PostgreSQL connections. Azure-based connections are authenticated using `DefaultAzureCredential` from the Azure Identity SDK.
+
+---
+
+## 📁 File Structure
+
+```
+src/
+  └── database_utilities/
+        └── DatabaseConnection.py
+```
 
 ---
 
 ## 📦 Prerequisites
 
-### 🔹 Install Required Packages
+Install the required dependencies:
 
 ```bash
-pip install pyodbc psycopg2-binary
+pip install pyodbc psycopg2 azure-identity fastapi
+```
+
+Ensure your environment variables/configuration values are correctly set in:
+
+- `SQL_DB_CONFIG` (for Azure/Local SQL)
+- `POSTGRES_DB_CONFIG` (for PostgreSQL)
+
+---
+
+## ⚙️ Configuration Examples
+
+### `SQL_DB_CONFIG` (Dictionary)
+```python
+SQL_DB_CONFIG = {
+    'sql_driver': '{ODBC Driver 17 for SQL Server}',
+    'sql_server': 'your-sql-server.database.windows.net',
+    'sql_client_id': 'your-managed-identity-client-id'
+}
+```
+
+### `POSTGRES_DB_CONFIG` (Dictionary)
+```python
+POSTGRES_DB_CONFIG = {
+    'user': 'your_user',
+    'password': 'your_password',
+    'host': 'your_postgres_host',
+    'dbname': 'your_database_name',
+    'ssl_mode': 'require'
+}
 ```
 
 ---
 
-# 🗄️ SQL Server (Using `pyodbc`)
+## 🧠 How it Works
 
-## 1️⃣ Local SQL Server Connection
+### `DatabaseConnection` Class
 
-### 🔹 Case 1: Trusted Connection (Windows Authentication)
+This class includes:
+- `get_sql_conn()`: Connects to SQL Server using either Azure token-based or local string-based authentication.
+- `get_postgres_conn()`: Connects to PostgreSQL using username/password-based authentication.
+
+---
+
+## 🔌 SQL Server Connection
+
+### ✅ Azure SQL Connection
+
+Uncomment the following block in `get_sql_conn()` to connect to Azure SQL:
 
 ```python
-import pyodbc
+credential = DefaultAzureCredential(managed_identity_client_id=SQL_DB_CONFIG["sql_client_id"])
+token = credential.get_token("https://database.windows.net/.default").token.encode("UTF-16-LE")
+token_struct = struct.pack(f"<I{len(token)}s", len(token), token)
 
-conn = pyodbc.connect(
-    r'DRIVER={ODBC Driver 17 for SQL Server};'
-    r'SERVER=localhost\SQLEXPRESS;'
-    r'DATABASE=YourDatabaseName;'
-    r'Trusted_Connection=yes;'
+conn_string = (
+    f"Driver={SQL_DB_CONFIG['sql_driver']};"
+    f"Server={SQL_DB_CONFIG['sql_server']},1433;"
+    f"Database=Management;"
+    f"UID={SQL_DB_CONFIG['sql_client_id']};"
+    f"Authentication=ActiveDirectoryMsi;"
+    f"Encrypt=yes;"
 )
 
-cursor = conn.cursor()
-cursor.execute("SELECT @@VERSION")
-row = cursor.fetchone()
-print("Connected to:", row[0])
-conn.close()
+sql_conn = pyodbc.connect(conn_string, attrs_before={sql_copt_ss_access_token: token_struct})
 ```
 
----
+### ✅ Local SQL Server Connection
 
-### 🔹 Case 2: SQL Authentication (Username & Password)
+To connect to a local SQL Server using username/password:
 
 ```python
-import pyodbc
-
-conn = pyodbc.connect(
-    r'DRIVER={ODBC Driver 17 for SQL Server};'
-    r'SERVER=localhost;'
-    r'DATABASE=YourDatabaseName;'
-    r'UID=your_username;'
-    r'PWD=your_password;'
+conn_string = (
+    f"Driver={SQL_DB_CONFIG['sql_driver']};"
+    f"Server={SQL_DB_CONFIG['sql_server']};"
+    f"TrustServerCertificate=yes;"
+    f"Encrypt=yes;"
 )
 
-cursor = conn.cursor()
-cursor.execute("SELECT DB_NAME()")
-row = cursor.fetchone()
-print("Connected to database:", row[0])
-conn.close()
+sql_conn = pyodbc.connect(conn_string)
 ```
 
 ---
 
-## 2️⃣ Azure SQL Database Connection
+## 🐘 PostgreSQL Connection
 
-### 🔹 Case 1: SQL Authentication (Recommended)
+PostgreSQL is connected using `psycopg2` and the connection string is formed as:
 
 ```python
-import pyodbc
-
-conn = pyodbc.connect(
-    r'DRIVER={ODBC Driver 17 for SQL Server};'
-    r'SERVER=your_server_name.database.windows.net;'
-    r'DATABASE=YourDatabaseName;'
-    r'UID=your_username;'
-    r'PWD=your_password;'
-    r'Encrypt=yes;'
-    r'TrustServerCertificate=no;'
-    r'Connection Timeout=30;'
+db_uri = (
+    f"postgresql://{POSTGRES_DB_CONFIG['user']}:{password}"
+    f"@{POSTGRES_DB_CONFIG['host']}/{POSTGRES_DB_CONFIG['dbname']}"
+    f"?sslmode={POSTGRES_DB_CONFIG['ssl_mode']}"
 )
 
-cursor = conn.cursor()
-cursor.execute("SELECT SUSER_SNAME()")
-row = cursor.fetchone()
-print("Connected as:", row[0])
-conn.close()
+postgres_conn = psycopg2.connect(db_uri)
 ```
 
 ---
 
-### 🔹 Case 2: Azure AD Integrated Authentication
-
-> ⚠️ Requires Azure Active Directory configuration and domain-joined machine.
+## 🚀 Usage
 
 ```python
-import pyodbc
+from database_utilities.DatabaseConnection import DatabaseConnection
 
-conn = pyodbc.connect(
-    r'DRIVER={ODBC Driver 17 for SQL Server};'
-    r'SERVER=your_server_name.database.windows.net;'
-    r'DATABASE=YourDatabaseName;'
-    r'Authentication=ActiveDirectoryIntegrated;'
-    r'Encrypt=yes;'
-    r'TrustServerCertificate=no;'
-    r'Connection Timeout=30;'
-)
+# Initialize
+db_connection = DatabaseConnection()
 
-cursor = conn.cursor()
-cursor.execute("SELECT SYSTEM_USER")
-row = cursor.fetchone()
-print("Connected as:", row[0])
-conn.close()
+# For SQL Server
+sql_conn = db_connection.get_sql_conn()
+
+# For PostgreSQL
+postgres_conn = db_connection.get_postgres_conn()
 ```
 
 ---
 
-# 🗄️ PostgreSQL (Using `psycopg2`)
+## ✅ Output
 
-## 1️⃣ Local PostgreSQL Connection
-
-### 🔹 Case 1: Default Localhost Setup
-
-```python
-import psycopg2
-
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    dbname="YourDatabaseName",
-    user="your_username",
-    password="your_password"
-)
-
-cursor = conn.cursor()
-cursor.execute("SELECT version();")
-row = cursor.fetchone()
-print("Connected to:", row[0])
-conn.close()
+Successful connection logs:
+```bash
+[INFO] Token obtained successfully
+[INFO] Connecting to the database...
+[INFO] Connection established successfully.
 ```
 
 ---
 
-### 🔹 Case 2: Using Unix Domain Socket (Linux/macOS only)
+## 🧪 Testing
 
-```python
-import psycopg2
+You can test by running:
 
-conn = psycopg2.connect(
-    dbname="YourDatabaseName",
-    user="your_username",
-    password="your_password",
-    host="/var/run/postgresql"
-)
-
-cursor = conn.cursor()
-cursor.execute("SELECT current_database();")
-row = cursor.fetchone()
-print("Connected to DB:", row[0])
-conn.close()
+```bash
+python database_utilities/DatabaseConnection.py
 ```
 
----
-
-## 2️⃣ Cloud PostgreSQL (e.g., Azure or AWS RDS)
-
-### 🔹 Case 1: Standard SSL Connection (AWS RDS / Azure DB for PostgreSQL)
-
-```python
-import psycopg2
-
-conn = psycopg2.connect(
-    host="your-cloud-host.postgres.database.azure.com",
-    port=5432,
-    dbname="YourDatabaseName",
-    user="your_username@your-cloud-host",
-    password="your_password",
-    sslmode="require"
-)
-
-cursor = conn.cursor()
-cursor.execute("SELECT current_user;")
-row = cursor.fetchone()
-print("Connected as:", row[0])
-conn.close()
-```
+Make sure `if __name__ == "__main__"` block is enabled for testing both SQL and PostgreSQL connections.
 
 ---
 
-### 🔹 Case 2: IAM/Azure AD Auth (Advanced)
+## 📄 License
 
-> ⚠️ This requires token-based authentication and IAM/AAD setup. Not included here due to complexity.
-
----
-
-## ✅ Connection Test Template (Generic)
-
-Use this to test your DB connection:
-
-```python
-try:
-    cursor.execute("SELECT NOW();")
-    result = cursor.fetchone()
-    print("Connection successful. Server time:", result[0])
-except Exception as e:
-    print("Connection failed:", e)
-finally:
-    conn.close()
-```
+This utility is internal to your project. Update with a license if sharing externally.
 
 ---
 
-## 🔐 Security Tips
+## ✍️ Author
 
-- ❌ **Never hardcode passwords in your scripts.**
-- ✅ Use environment variables or secret managers (`.env`, AWS Secrets Manager, Azure Key Vault).
-- ✅ Always add `.env` to `.gitignore`.
-
----
-
-## 📎 Useful Links
-
-- [pyodbc Docs](https://learn.microsoft.com/sql/connect/python/python-sql-driver-pyodbc)
-- [psycopg2 Docs](https://www.psycopg.org/docs/)
-- [ODBC Drivers for SQL Server](https://learn.microsoft.com/sql/connect/odbc/download-odbc-driver-for-sql-server)
-- [Azure PostgreSQL](https://learn.microsoft.com/azure/postgresql/)
-- [AWS RDS PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html)
-
----
+Gopichand
