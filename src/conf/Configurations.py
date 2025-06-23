@@ -37,7 +37,6 @@ model_path = r"C:\llm\MiniLM-L6-v2"
 # Give the pytesseract path
 pytesseract_path= r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-
 # Define the database configuration
 db_config = {
         "dbname": "postgres",
