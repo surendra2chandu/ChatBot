@@ -1,6 +1,7 @@
 import subprocess
 import json
 
+
 def get_logged_in_azure_user():
     try:
         # Run Azure CLI command (pass full command as a string for shell=True on Windows)

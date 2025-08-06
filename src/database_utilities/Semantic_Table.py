@@ -19,6 +19,8 @@ class SemanticTable:
             self.conn = psycopg2.connect(**self.db_config)
 
 
+
+
             # Create a cursor object
             self.cursor = self.conn.cursor()
         except Exception as e:
