@@ -1,0 +1,22 @@
+services:
+  vllm-server:
+    image: vllm/vllm-openai:latest  # Use the official VLLM image
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvdia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"  # Expose the server on port 8000
+    volumes:
+      - ./.cache/huggingface:/root/.cache/huggingface  # Mount the Hugging Face cache
+    command:
+      - "--model"
+      - "TheBloke/Mistral-7B-Instruct-v0.1-GPTQ"
+      - "--host"
+      - "0.0.0.0"
+      - "logits-processor-pattern"
+      - 'vllm.logits_processors.*|src.logits_processors.*'

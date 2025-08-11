@@ -28,7 +28,6 @@ class TextSummarizer:
         return summary
 
 
-
 if __name__ == "__main__":
     # Run summarization
     res = TextSummarizer().summarize("doc7")
